@@ -58,15 +58,17 @@ def print_animals(animals: list):
         animal_locations = animal.get('locations')
         animal_characteristics = animal.get('characteristics', {})
         if animal_name:
-            output += f"Name: {animal_name}\n"
+            output += '<li class="cards__item">'
+            output += f"Name: {animal_name}<br/>\n"
             animal_characteristics_diet = animal_characteristics.get('diet')
             if animal_characteristics_diet:
-                output += f"Diet: {animal_characteristics_diet}\n"
+                output += f"Diet: {animal_characteristics_diet}<br/>\n"
             if animal_locations:
-                output += f"Locations: {animal_locations[0]}\n"
+                output += f"Locations: {animal_locations[0]}<br/>\n"
             animal_characteristics_type = animal_characteristics.get('type')
             if animal_characteristics_type:
-                output += f"Type: {animal_characteristics_type}\n"
+                output += f"Type: {animal_characteristics_type}<br/>\n"
+            output += "</li>"
     return output
 
 
