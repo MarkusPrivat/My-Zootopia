@@ -37,14 +37,11 @@ def write_html_file(new_html):
     :return: None
     """
     file_path = os.path.join(BASE_PATH, 'animals.html')
-    try:
-        with open(file_path, 'w', encoding='utf-8') as file_obj:
-            return file_obj.write(new_html)
-    except (json.JSONDecodeError, FileNotFoundError):
-        return ""
+    with open(file_path, 'w', encoding='utf-8') as file_obj:
+        file_obj.write(new_html)
 
 
-def print_animals(animals: list):
+def get_animals_for_html(animals: list):
     """
     Checks if we have the animal data we want to print and prints it.
     If we have no name for the animal, we skip it.
@@ -53,23 +50,40 @@ def print_animals(animals: list):
     :return: a string with all available animal data
     """
     output = ""
-    for animal in animals:
-        animal_name = animal.get('name')
-        animal_locations = animal.get('locations')
-        animal_characteristics = animal.get('characteristics', {})
-        if animal_name:
-            output += (f'<li class="cards__item">\n'
-                       f'<div class="card__title">{animal_name}</div>\n')
-            animal_characteristics_diet = animal_characteristics.get('diet')
-            if animal_characteristics_diet:
-                output += (f'<p class="card__text">\n'
-                           f'<strong>Diet:</strong> {animal_characteristics_diet}<br/>\n')
-            if animal_locations:
-                output += f"<strong>Location:</strong> {animal_locations[0]}<br/>\n"
-            animal_characteristics_type = animal_characteristics.get('type')
-            if animal_characteristics_type:
-                output += f"<strong>Type:</strong> {animal_characteristics_type}<br/>\n"
-            output += "</p>\n</li>\n"
+    for animal_obj in animals:
+        output += serialize_animal(animal_obj)
+    return output
+
+
+def serialize_animal(animal_obj: dict):
+    """
+    Enrich animal data with HTML structure
+    :param animal_obj: data for one animal
+    :return: serialize animal data as a string
+    """
+    output = ""
+    animal_name = animal_obj.get('name')
+    animal_locations = animal_obj.get('locations')
+    animal_characteristics = animal_obj.get('characteristics', {})
+    if animal_name:
+        output += (f'<li class="cards__item">\n'
+                   f'<div class="card__title">{animal_name}</div>\n')
+        animal_characteristics_diet = animal_characteristics.get('diet')
+        if animal_characteristics_diet:
+            output += (f'<p class="card__text">\n'
+                       f'<strong>Diet:</strong> {animal_characteristics_diet}<br/>\n')
+        if animal_locations:
+            output += f"<strong>Location:</strong> {animal_locations[0]}<br/>\n"
+        animal_characteristics_type = animal_characteristics.get('type')
+        if animal_characteristics_type:
+            output += f"<strong>Type:</strong> {animal_characteristics_type}<br/>\n"
+        animal_characteristics_lifespan = animal_characteristics.get('lifespan')
+        if animal_characteristics_lifespan:
+            output += f"<strong>Lifespan:</strong> {animal_characteristics_lifespan}<br/>\n"
+        animal_characteristics_color = animal_characteristics.get('color')
+        if animal_characteristics_color:
+            output += f"<strong>Color:</strong> {animal_characteristics_color}<br/>\n"
+        output += "</p>\n</li>\n"
     return output
 
 
@@ -93,7 +107,7 @@ def main():
     :return: None
     """
     animals = read_json_file()
-    animals_for_html = print_animals(animals)
+    animals_for_html = get_animals_for_html(animals)
     html_template = read_html_file()
     new_html = past_animals_in_html(html_template, animals_for_html)
     write_html_file(new_html)
