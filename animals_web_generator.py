@@ -70,20 +70,19 @@ def serialize_animal(animal_obj: dict):
                    f'<div class="card__title">{animal_name}</div>\n')
         animal_characteristics_diet = animal_characteristics.get('diet')
         if animal_characteristics_diet:
-            output += (f'<p class="card__text">\n'
-                       f'<strong>Diet:</strong> {animal_characteristics_diet}<br/>\n')
+            output += (f'<div class="card__text">\n<ul>\n<li>\n<strong>Diet:</strong> {animal_characteristics_diet}</li>\n')
         if animal_locations:
-            output += f"<strong>Location:</strong> {animal_locations[0]}<br/>\n"
+            output += f"<li><strong>Location:</strong> {animal_locations[0]}</li>\n"
         animal_characteristics_type = animal_characteristics.get('type')
         if animal_characteristics_type:
-            output += f"<strong>Type:</strong> {animal_characteristics_type}<br/>\n"
+            output += f"<li><strong>Type:</strong> {animal_characteristics_type}</li>\n"
         animal_characteristics_lifespan = animal_characteristics.get('lifespan')
         if animal_characteristics_lifespan:
-            output += f"<strong>Lifespan:</strong> {animal_characteristics_lifespan}<br/>\n"
+            output += f"<li><strong>Lifespan:</strong> {animal_characteristics_lifespan}</li>\n"
         animal_characteristics_color = animal_characteristics.get('color')
         if animal_characteristics_color:
-            output += f"<strong>Color:</strong> {animal_characteristics_color}<br/>\n"
-        output += "</p>\n</li>\n"
+            output += f"<li><strong>Color:</strong> {animal_characteristics_color}</li>\n"
+        output += "</ul>\n</div>\n</li>\n"
     return output
 
 
