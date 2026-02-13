@@ -31,7 +31,7 @@ def read_html_file():
         return ""
 
 
-def write_html_file(new_html):
+def write_html_file(new_html: str):
     """
     writes a string to html file
     :return: None
@@ -70,7 +70,8 @@ def serialize_animal(animal_obj: dict):
                    f'<div class="card__title">{animal_name}</div>\n')
         animal_characteristics_diet = animal_characteristics.get('diet')
         if animal_characteristics_diet:
-            output += (f'<div class="card__text">\n<ul>\n<li>\n<strong>Diet:</strong> {animal_characteristics_diet}</li>\n')
+            output += (f'<div class="card__text">\n<ul>\n<li>\n'
+                       f'<strong>Diet:</strong> {animal_characteristics_diet}</li>\n')
         if animal_locations:
             output += f"<li><strong>Location:</strong> {animal_locations[0]}</li>\n"
         animal_characteristics_type = animal_characteristics.get('type')
