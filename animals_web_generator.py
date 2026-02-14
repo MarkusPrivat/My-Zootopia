@@ -61,33 +61,50 @@ def serialize_animal(animal_obj: dict):
     :param animal_obj: data for one animal
     :return: serialize animal data as a string
     """
-    output = ""
     animal_name = animal_obj.get('name')
-    animal_locations = animal_obj.get('locations')
+    output = ""
+
+    # fail fast if we have no name
+    if not animal_name:
+        return output
+
+    # structure html elements
+    output += (f'<li class="cards__item">\n'
+               f'<div class="card__title">{animal_name}</div>\n'
+               f'<div class="card__text">\n<ul>\n')
+    locations = animal_obj.get('locations')
+    if locations:
+        output += f'<li><strong>Location:</strong> {locations[0]}</li>\n'
+
+    # serialize animal characteristics
     animal_characteristics = animal_obj.get('characteristics', {})
-    if animal_name:
-        output += (f'<li class="cards__item">\n'
-                   f'<div class="card__title">{animal_name}</div>\n')
-        animal_characteristics_diet = animal_characteristics.get('diet')
-        if animal_characteristics_diet:
-            output += (f'<div class="card__text">\n<ul>\n<li>\n'
-                       f'<strong>Diet:</strong> {animal_characteristics_diet}</li>\n')
-        if animal_locations:
-            output += f"<li><strong>Location:</strong> {animal_locations[0]}</li>\n"
-        animal_characteristics_type = animal_characteristics.get('type')
-        if animal_characteristics_type:
-            output += f"<li><strong>Type:</strong> {animal_characteristics_type}</li>\n"
-        animal_characteristics_lifespan = animal_characteristics.get('lifespan')
-        if animal_characteristics_lifespan:
-            output += f"<li><strong>Lifespan:</strong> {animal_characteristics_lifespan}</li>\n"
-        animal_characteristics_color = animal_characteristics.get('color')
-        if animal_characteristics_color:
-            output += f"<li><strong>Color:</strong> {animal_characteristics_color}</li>\n"
-        output += "</ul>\n</div>\n</li>\n"
+    output += serialize_animal_characteristics(animal_characteristics)
+    output += "</ul>\n</div>\n</li>\n"
     return output
 
 
-def past_animals_in_html(html_template: str, animals_for_html: str):
+def serialize_animal_characteristics(animal_characteristics):
+    """
+    Enrich animal data with HTML structure
+    :param animal_characteristics: characteristics from animal
+    :return: serialize animal characteristics data as a string
+    """
+    output = ""
+    if not animal_characteristics:
+        return output
+    card_text = {
+        'Diet': animal_characteristics.get('diet'),
+        'Type': animal_characteristics.get('type'),
+        'Lifespan': animal_characteristics.get('lifespan'),
+        'Color': animal_characteristics.get('color')
+    }
+    for label, value in card_text.items():
+        if value:
+            output += f'<li><strong>{label}:</strong> {value}</li>\n'
+    return output
+
+
+def paste_animals_in_html(html_template: str, animals_for_html: str):
     """
     Combine the html template and animals data into one html file.
     Only if html template contains '__REPLACE_ANIMALS_INFO__' else we get an empty string.
@@ -109,7 +126,7 @@ def main():
     animals = read_json_file()
     animals_for_html = get_animals_for_html(animals)
     html_template = read_html_file()
-    new_html = past_animals_in_html(html_template, animals_for_html)
+    new_html = paste_animals_in_html(html_template, animals_for_html)
     write_html_file(new_html)
 
 
